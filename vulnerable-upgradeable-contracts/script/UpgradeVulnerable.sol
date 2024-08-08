@@ -14,14 +14,14 @@ contract UpgradeVulnerable is Script {
         vm.startBroadcast();
         SecureUpgradeableContract newContract = new SecureUpgradeableContract();
         vm.stopBroadcast();
-        address proxy = upgradeBox(mostRecentlyDeployedProxy, address(newContract));
+        address proxy = upgradeSecure(mostRecentlyDeployedProxy, address(newContract));
         return proxy;
     }
 
-    function upgradeBox(address proxyAddress, address newBox) public returns (address) {
+    function upgradeSecure(address proxyAddress, address newContract) public returns (address) {
         vm.startBroadcast();
         VulnerableUpgradeableContract proxy = VulnerableUpgradeableContract(payable(proxyAddress));
-        proxy.upgradeToAndCall(address(newBox), new bytes(0));
+        proxy.upgradeToAndCall(address(newContract), new bytes(0));
         vm.stopBroadcast();
         return address(proxy);
     }
