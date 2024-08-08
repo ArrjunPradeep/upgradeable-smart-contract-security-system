@@ -20,7 +20,7 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
         _disableInitializers();
     }
 
-    function initialize(address initialOwner) initializer public {
+    function initialize(address initialOwner) public initializer {
         __Ownable_init(initialOwner);
         __Pausable_init();
         __UUPSUpgradeable_init();
@@ -36,9 +36,9 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
     // Withdraw funds from the contract (vulnerable to reentrancy)
     function withdraw() external whenNotPaused {
         uint256 amount = balances[msg.sender];
-        
+
         // Vulnerable external call
-        (bool success, ) = msg.sender.call{value: amount}("");
+        (bool success,) = msg.sender.call{value: amount}("");
         require(success, "Transfer failed");
 
         balances[msg.sender] = 0;
@@ -57,12 +57,5 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
     }
 
     // Override function to authorize contract upgrades
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        onlyOwner
-        override
-    {}
-
-    // Required by Solidity to override
-    receive() external payable {}
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }

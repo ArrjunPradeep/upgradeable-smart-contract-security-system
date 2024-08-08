@@ -8,7 +8,13 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 
-contract SecureUpgradeableContract is Initializable, OwnableUpgradeable, PausableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable {
+contract SecureUpgradeableContract is
+    Initializable,
+    OwnableUpgradeable,
+    PausableUpgradeable,
+    UUPSUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     // Mapping to store balances
     mapping(address => uint256) public balances;
 
@@ -21,7 +27,7 @@ contract SecureUpgradeableContract is Initializable, OwnableUpgradeable, Pausabl
         _disableInitializers();
     }
 
-    function initialize(address initialOwner) initializer public {
+    function initialize(address initialOwner) public initializer {
         __Ownable_init(initialOwner);
         __Pausable_init();
         __UUPSUpgradeable_init();
@@ -44,7 +50,7 @@ contract SecureUpgradeableContract is Initializable, OwnableUpgradeable, Pausabl
         balances[msg.sender] = 0;
 
         // Safe external call
-        (bool success, ) = msg.sender.call{value: amount}("");
+        (bool success,) = msg.sender.call{value: amount}("");
         require(success, "Transfer failed");
 
         emit Withdrawn(msg.sender, amount);
@@ -61,12 +67,5 @@ contract SecureUpgradeableContract is Initializable, OwnableUpgradeable, Pausabl
     }
 
     // Override function to authorize contract upgrades
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        onlyOwner
-        override
-    {}
-
-    // Required by Solidity to override
-    receive() external payable {}
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }
