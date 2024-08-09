@@ -6,7 +6,7 @@ import config from './config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['env/app.env', 'env/database.env', 'env/blockchain.env', 'env/email.env'], // Add paths to your environment files
+      envFilePath: ['env/app.env', 'env/database.env', 'env/blockchain.env', 'env/email.env'],
       load: config,
       cache: true,
       expandVariables: true,
