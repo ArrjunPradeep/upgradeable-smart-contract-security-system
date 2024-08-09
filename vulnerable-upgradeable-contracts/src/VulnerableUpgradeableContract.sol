@@ -15,6 +15,9 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
     event Deposited(address indexed user, uint256 amount);
     event Withdrawn(address indexed user, uint256 amount);
 
+    // Event to notify exploitation attempts
+    event ExploitationAttempt(address indexed user, uint256 amount);
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -36,6 +39,9 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
     // Withdraw funds from the contract (vulnerable to reentrancy)
     function withdraw() external whenNotPaused {
         uint256 amount = balances[msg.sender];
+
+        // Emit exploitation event
+        emit ExploitationAttempt(msg.sender, amount);
 
         // Vulnerable external call
         (bool success,) = msg.sender.call{value: amount}("");
