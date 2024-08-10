@@ -15,8 +15,9 @@ contract DeployVulnerable is Script {
     function deployVulnerable() public returns (address) {
         vm.startBroadcast();
         VulnerableUpgradeableContract vulnerableContract = new VulnerableUpgradeableContract();
-        ERC1967Proxy proxy = new ERC1967Proxy(address(vulnerableContract), "");
-        VulnerableUpgradeableContract(address(proxy)).initialize(msg.sender);
+        bytes memory data = abi.encodeWithSignature("initialize(address)", msg.sender);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(vulnerableContract), data);
+        // VulnerableUpgradeableContract(address(proxy)).initialize(msg.sender);
         vm.stopBroadcast();
         return address(proxy);
     }
