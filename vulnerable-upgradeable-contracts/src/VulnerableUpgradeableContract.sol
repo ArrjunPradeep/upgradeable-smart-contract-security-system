@@ -20,11 +20,11 @@ contract VulnerableUpgradeableContract is Initializable, OwnableUpgradeable, Pau
         _disableInitializers();
     }
 
-    function initialize(address initialOwner) public initializer {
-        __Ownable_init(initialOwner);
+    function initialize() public initializer {
+        __Ownable_init(msg.sender);
         __Pausable_init();
         __UUPSUpgradeable_init();
-        transferOwnership(initialOwner);
+        transferOwnership(msg.sender);
     }
 
     // Deposit funds into the contract

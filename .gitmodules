@@ -7,3 +7,6 @@
 [submodule "vulnerable-upgradeable-contracts/lib/foundry-devops"]
 	path = vulnerable-upgradeable-contracts/lib/foundry-devops
 	url = https://github.com/chainaccelorg/foundry-devops
+[submodule "vulnerable-upgradeable-contracts/lib/openzeppelin-foundry-upgrades"]
+	path = vulnerable-upgradeable-contracts/lib/openzeppelin-foundry-upgrades
+	url = https://github.com/OpenZeppelin/openzeppelin-foundry-upgrades
