@@ -28,15 +28,6 @@
         "tsConfigPath": "apps/front-run-defense/tsconfig.app.json"
       }
     },
-    "performance-monitoring": {
-      "type": "application",
-      "root": "apps/performance-monitoring",
-      "entryFile": "main",
-      "sourceRoot": "apps/performance-monitoring/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/performance-monitoring/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
