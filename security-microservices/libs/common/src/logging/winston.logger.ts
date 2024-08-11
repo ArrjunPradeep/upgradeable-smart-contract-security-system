@@ -1,36 +1,43 @@
-import { createLogger, format, transports } from "winston";
+import { createLogger, format, transports } from 'winston';
+import 'winston-mongodb';
 
+// Custom log display format
 const customFormat = format.printf(({ timestamp, level, context, message }) => {
     return `[Nest] ${process.pid}  - ${timestamp}  ${level.toUpperCase().padEnd(7)}  [${context}] ${message}`;
 });
 
+// Logger configuration
 const winstonLogger = createLogger({
     format: format.combine(
         format.timestamp({ format: 'MM/DD/YYYY, h:mm:ss A' }),
         format.errors({ stack: true }),
+        customFormat
     ),
     transports: [
-        new transports.File({
-            filename: 'combined.log',
-            level: 'info',
+        new transports.Console({
             format: format.combine(
-                customFormat,
-                // format.json()
+                format.colorize(),
+                customFormat
             ),
         }),
-        new transports.File({
-            filename: 'error.log',
+        new transports.MongoDB({
+            db: 'mongodb+srv://root:password123$@cluster0.gkaev.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+            collection: 'logs',
+            level: 'info',
+            format: format.combine(
+                format.timestamp(),
+                format.json()
+            )
+        }),
+        new transports.MongoDB({
+            db: 'mongodb+srv://root:password123$@cluster0.gkaev.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+            collection: 'errors',
             level: 'error',
             format: format.combine(
-                customFormat
-            ),
-        }),
-        new transports.Console({
-            level: 'info',
-            format: format.combine(
-                customFormat
-            ),
-        }),
+                format.timestamp(),
+                format.json()
+            )
+        })
     ],
 });
 

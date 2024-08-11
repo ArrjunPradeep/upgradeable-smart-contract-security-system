@@ -2,9 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { FrontRunDefenseModule } from './front-run-defense.module';
 import { FrontRunDefenseService } from './front-run-defense.service';
+import { instance } from '@app/common/logging/winston.logger';
+import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
-  const app = await NestFactory.create(FrontRunDefenseModule);
+  const app = await NestFactory.create(FrontRunDefenseModule, {
+    logger: WinstonModule.createLogger({
+      instance: instance,
+    }),
+  });
 
   const configService = app.get(ConfigService);
 
