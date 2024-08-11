@@ -2,6 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ethers } from 'ethers';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
+import { FrontRunDefenseLog } from './front-run-defense.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class FrontRunDefenseService {
@@ -20,6 +23,7 @@ export class FrontRunDefenseService {
   ];
 
   constructor(
+    @InjectModel(FrontRunDefenseLog.name) private readonly frontRunDefenseLogModel: Model<FrontRunDefenseLog>,
     private readonly configService: ConfigService,
   ) {
     this.provider = new ethers.WebSocketProvider(this.configService.get<string>('BLOCKCHAIN.WEBSOCKET_URL'));
@@ -36,6 +40,21 @@ export class FrontRunDefenseService {
       try {
         const tx = await this.provider.getTransaction(txHash);
         if (tx && this.isSuspiciousTransaction(tx)) {
+
+          const reason = tx && this.isSuspiciousTransaction(tx) ? 'Suspicious transaction' : 'Normal transaction';
+
+          // Store the detected suspicious txn in the database
+          const newFrontRunDefenseLog = new this.frontRunDefenseLogModel({
+            from: tx.from,
+            reason: reason,
+            amount: ethers.formatEther(tx.value),
+            contractAddress: this.contractAddress,
+            hash: tx.hash,
+            data: tx.data
+          });
+
+          await newFrontRunDefenseLog.save();
+
           this.logger.warn(`Suspicious transaction detected: ${txHash}. Triggering pause.`);
           await this.triggerPauseContract(tx);
         }
@@ -60,7 +79,7 @@ export class FrontRunDefenseService {
     let gasPriceGwei;
 
     // check for high maxFeePerGas price (front-running detection)
-    if(interactsWithVulnerableFunction) {
+    if (interactsWithVulnerableFunction) {
       this.logger.log(`interactsWithVulnerableFunction`, interactsWithVulnerableFunction);
       this.logger.log(`transaction hash`, tx.hash);
       this.logger.log(`transaction hash`, tx.data);
