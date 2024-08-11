@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Global()
 @Module({
@@ -13,20 +13,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       expandVariables: true,
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async(configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.getOrThrow<string>('DATABASE.HOST'),
-        port: configService.getOrThrow<number>('DATABASE.PORT'),
-        username: configService.getOrThrow<string>('DATABASE.USERNAME'),
-        password: configService.getOrThrow<string>('DATABASE.PASSWORD'),
-        database: configService.getOrThrow<string>('DATABASE.NAME'),
-        autoLoadEntities: configService.getOrThrow<boolean>('DATABASE.AUTO_LOAD_ENTITIES'),
-        synchronize: configService.getOrThrow<boolean>('DATABASE.SYNCHRONIZE')
+        uri: configService.getOrThrow<string>('DATABASE.MONGO_URL')
       }),
       inject: [ConfigService]
-    }),
+    })
   ],
   providers: [],
   exports: [ConfigModule],

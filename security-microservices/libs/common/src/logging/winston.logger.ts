@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { createLogger, format, transports } from 'winston';
 import 'winston-mongodb';
 
@@ -21,7 +22,7 @@ const winstonLogger = createLogger({
             ),
         }),
         new transports.MongoDB({
-            db: 'mongodb+srv://root:password123$@cluster0.gkaev.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+            db: process.env['MONGO_URL'],
             collection: 'logs',
             level: 'info',
             format: format.combine(
@@ -30,7 +31,7 @@ const winstonLogger = createLogger({
             )
         }),
         new transports.MongoDB({
-            db: 'mongodb+srv://root:password123$@cluster0.gkaev.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+            db: process.env['MONGO_URL'],
             collection: 'errors',
             level: 'error',
             format: format.combine(
