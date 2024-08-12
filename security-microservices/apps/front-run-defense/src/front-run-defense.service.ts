@@ -113,6 +113,19 @@ export class FrontRunDefenseService {
 
       this.logger.log(`Pause transaction sent: ${tx.hash}`);
       await tx.wait();
+
+      // Store the pause txn in the database
+      const newFrontRunDefenseLog = new this.frontRunDefenseLogModel({
+        from: tx.from,
+        reason: "contract paused",
+        amount: ethers.formatEther(tx.value),
+        contractAddress: this.contractAddress,
+        hash: tx.hash,
+        data: tx.data
+      });
+
+      await newFrontRunDefenseLog.save();
+      
       this.logger.log('Contract paused successfully.');
     } catch (error) {
       this.logger.error('Error triggering contract pause', error);
