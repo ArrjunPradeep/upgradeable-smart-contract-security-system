@@ -1,7 +1,42 @@
 services:
-  postgres_db:
-    image: postgres:13.15-alpine
+  exploit-detection:
+    build:
+      context: ./apps/exploit-detection
+      dockerfile: Dockerfile
+    image: arrjunpradeep/exploit-detection:latest
     ports:
-      - "5432:5432"
-    env_file: 
+      - "3369:3000"
+    env_file:
+      - ./env/app.env
       - ./env/database.env
+      - ./env/blockchain.env
+      - ./env/email.env
+    command: npm run start:dev
+
+  front-run-defense:
+    build:
+      context: ./apps/front-run-defense
+      dockerfile: Dockerfile
+    image: arrjunpradeep/front-run-defense:latest
+    ports:
+      - "3366:3000"
+    env_file:
+      - ./env/app.env
+      - ./env/database.env
+      - ./env/blockchain.env
+      - ./env/email.env
+    command: npm run start:dev front-run-defense
+  
+  slither-report:
+    build:
+      context: ./apps/slither-report
+      dockerfile: Dockerfile
+    image: arrjunpradeep/slither-report:latest
+    ports:
+      - "3363:3000"
+    env_file:
+      - ./env/app.env
+      - ./env/database.env
+      - ./env/blockchain.env
+      - ./env/email.env
+    command: npm run start:dev slither-report
