@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "slither-report": {
+      "type": "application",
+      "root": "apps/slither-report",
+      "entryFile": "main",
+      "sourceRoot": "apps/slither-report/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/slither-report/tsconfig.app.json"
+      }
     }
   }
 }

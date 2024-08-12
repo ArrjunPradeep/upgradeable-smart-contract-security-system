@@ -16,7 +16,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async(configService: ConfigService) => ({
-        uri: configService.getOrThrow<string>('DATABASE.MONGO_URL')
+        uri: configService.getOrThrow<string>('DATABASE.MONGO_URL'),
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        ssl: true,
+        retryWrites: true,      
       }),
       inject: [ConfigService]
     })
