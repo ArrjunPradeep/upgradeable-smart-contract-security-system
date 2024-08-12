@@ -59,7 +59,7 @@ export class FrontRunDefenseService {
           await this.triggerPauseContract(tx);
         }
       } catch (error) {
-        this.logger.error('Error processing transaction', error);
+        this.logger.error('', error);
       }
     });
 
@@ -125,7 +125,7 @@ export class FrontRunDefenseService {
       });
 
       await newFrontRunDefenseLog.save();
-      
+
       this.logger.log('Contract paused successfully.');
     } catch (error) {
       this.logger.error('Error triggering contract pause', error);
