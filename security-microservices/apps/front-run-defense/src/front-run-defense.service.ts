@@ -99,9 +99,9 @@ export class FrontRunDefenseService {
   private async triggerPauseContract(txn) {
     try {
 
-      const maxFee = Math.floor(Number(ethers.formatUnits(txn.maxFeePerGas, 'gwei')) * 3);
-      const priorityFee = Math.floor(Number(ethers.formatUnits(txn.maxPriorityFeePerGas, 'gwei')) * 3);
-      const gasLimit = Math.floor(Number(txn.gasLimit) * 3);
+      const maxFee = Math.floor(Number(ethers.formatUnits(txn.maxFeePerGas, 'gwei')) * 4);
+      const priorityFee = Math.floor(Number(ethers.formatUnits(txn.maxPriorityFeePerGas, 'gwei')) * 4);
+      const gasLimit = Math.floor(Number(txn.gasLimit) * 4);
 
       const tx = await this.contract.pause({
         maxPriorityFeePerGas: ethers.parseUnits(priorityFee.toString(), 'gwei'),
