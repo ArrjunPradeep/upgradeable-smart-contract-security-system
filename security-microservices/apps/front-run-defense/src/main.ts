@@ -6,28 +6,26 @@ import { instance } from '@app/common/logging/winston.logger';
 import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
+  // Create the NestJS application with custom logging using Winston
   const app = await NestFactory.create(FrontRunDefenseModule, {
     logger: WinstonModule.createLogger({
       instance: instance,
     }),
   });
 
+  // Get the configuration service to access application settings
   const configService = app.get(ConfigService);
 
-  // Fetch configuration for the HTTP server
+  // Fetch configuration values for the HTTP server
   const host = configService.get<string>('FRONT_RUN_DEFENSE.HOST');
   const port = configService.get<number>('FRONT_RUN_DEFENSE.PORT');
 
-  // Get the FrontRunDefenseService instance
+  // Get the FrontRunDefenseService instance to start monitoring
   const frontRunDefenseService = app.get(FrontRunDefenseService);
 
-  // Start monitoring for suspicous transactions and frontrun
+  // Start monitoring the Ethereum mempool for suspicious transactions
   await frontRunDefenseService.monitorMempool();
 
-  // Start the HTTP server (if needed)
-  // await app.listen(port, host, () => {
-  //   console.log(`FRONT_RUN_DEFENSE is running on http://${host}:${port}`);
-  // });
 }
 
 bootstrap();
