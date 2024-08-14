@@ -1,4 +1,4 @@
-## Vulnerablr Upgradeable Smart Contract [[vulnerableUpgradeable](https://sepolia.etherscan.io/address/0xa117469407c09249b17d48f2fbde4dd087a96ad4#code)] [[proxy](https://sepolia.etherscan.io/address/0xF7294Cea58E21C979b1ee6bF23EB1bf383A64907)]
+## Vulnerable Upgradeable Smart Contract [[vulnerableUpgradeable](https://sepolia.etherscan.io/address/0xa117469407c09249b17d48f2fbde4dd087a96ad4#code)] [[proxy](https://sepolia.etherscan.io/address/0xF7294Cea58E21C979b1ee6bF23EB1bf383A64907)][[upgradedContractWithReentrancyGuard](https://sepolia.etherscan.io/address/0xF7294Cea58E21C979b1ee6bF23EB1bf383A64907#writeProxyContract)]
 
 ## Overview
 
@@ -49,14 +49,14 @@
     Run the container for deploying and verifying the `vulnerable upgradeable` smart contract:
 
     ```shell
-    docker run arrjunpradeep/upgradeablecontract script DeployVulnerable.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --etherscan-api-key $ETHERSCAN_API_KEY --contracts src/VulnerableUpgradeableContract.sol:VulnerableUpgradeableContract --verify --sender $SENDER_ADDRESS --private-key $PRIVATE_KEY
+    docker run arrjunpradeep/upgradeablecontract script/DeployVulnerable.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --etherscan-api-key $ETHERSCAN_API_KEY --contracts src/VulnerableUpgradeableContract.sol:VulnerableUpgradeableContract --verify --sender $SENDER_ADDRESS --private-key $PRIVATE_KEY
     ``` 
 4. **Deploy and Verify the `secure upgradeable` Smart Contract**
 
     Run the container for deploying and verifying the `vulnerable upgradeable` smart contract:
 
     ```shell
-    docker run arrjunpradeep/upgradeablecontract script UpgradeVulnerable.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --etherscan-api-key $ETHERSCAN_API_KEY --contracts src/SecureUpgradeableContract.sol:SecureUpgradeableContract --verify --sender $SENDER_ADDRESS --private-key $PRIVATE_KEY
+    docker run arrjunpradeep/upgradeablecontract script/UpgradeVulnerable.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --etherscan-api-key $ETHERSCAN_API_KEY --contracts src/SecureUpgradeableContract.sol:SecureUpgradeableContract --verify --sender $SENDER_ADDRESS --private-key $PRIVATE_KEY
     ``` 
 
     **Notes :**
