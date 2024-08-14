@@ -11,16 +11,23 @@ export class SlitherReportService {
   private readonly logger = new Logger(SlitherReportService.name);
   private readonly reportsDir = join(process.cwd(), 'slither-reports');
 
-  constructor(@InjectModel('SlitherResult') private readonly slitherResultModel: Model<SlitherResult>) {}
+  constructor(
+    @InjectModel('SlitherResult') private readonly slitherResultModel: Model<SlitherResult>,
+  ) {}
 
+  // Run Slither analysis and process the results
   async runSlither(filepath: string, outputFilename: string): Promise<void> {
+    // Ensure the reports directory exists
     await this.ensureReportsDirExists();
 
+    // Define the path for the output file
     const outputFilePath = join(this.reportsDir, outputFilename);
+    // Command to execute Slither and output results in JSON format
     const command = `slither ${filepath} --json ${outputFilePath}`;
     this.logger.log(`Executing command: ${command}`);
 
     return new Promise((resolve, reject) => {
+      // Execute the Slither command
       exec(command, async (error, stdout, stderr) => {
 
         if (stderr) {
@@ -39,7 +46,7 @@ export class SlitherReportService {
           // Log after reading the file
           this.logger.log(`File read successfully. Contents length: ${fileContents.length}`);
 
-          // Parse the JSON data
+          // Parse the JSON data from the file
           const jsonData = JSON.parse(fileContents);
 
           // Filter the JSON data using the filterSlitherOutput function
@@ -60,6 +67,7 @@ export class SlitherReportService {
     });
   }
 
+  // Ensure the directory for storing reports exists
   private async ensureReportsDirExists(): Promise<void> {
     try {
       await fs.mkdir(this.reportsDir, { recursive: true });
@@ -69,6 +77,7 @@ export class SlitherReportService {
     }
   }
 
+  // Save the filtered Slither results to MongoDB
   private async saveFilteredResults(results: any[]): Promise<void> {
     try {
       await this.slitherResultModel.insertMany(results);
@@ -91,6 +100,7 @@ function filterSlitherOutput(slitherJson: any) {
       keysToExtract.forEach(key => {
         if (detector.hasOwnProperty(key)) {
           if (key === 'description') {
+            // Extract relevant part of description
             const match = detector.description.match(/^[^\s]+\([^\)]+\)/);
             filteredDetector[key] = match ? match[0] : detector.description;
           } else {

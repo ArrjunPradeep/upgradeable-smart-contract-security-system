@@ -7,10 +7,22 @@ import { CommonModule } from '@app/common/common.module';
 
 @Module({
   imports: [
+    // Import CommonModule to use shared services or modules
     CommonModule,
-    MongooseModule.forFeature([{ name: SlitherResult.name, schema: SlitherResultSchema }]),
+
+    // Import MongooseModule to enable MongoDB schema integration
+    // Here we are defining the SlitherResult schema to be used with MongoDB
+    MongooseModule.forFeature([
+      { name: SlitherResult.name, schema: SlitherResultSchema },
+    ]),
   ],
-  controllers: [SlitherReportController],
-  providers: [SlitherReportService],
+  controllers: [
+    // Register the SlitherReportController to handle incoming HTTP requests
+    SlitherReportController,
+  ],
+  providers: [
+    // Register the SlitherReportService to handle the business logic
+    SlitherReportService,
+  ],
 })
 export class SlitherReportModule {}
